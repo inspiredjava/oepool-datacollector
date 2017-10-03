@@ -1,1 +1,2 @@
+[![Build Status](https://travis-ci.org/inspiredjava/oepool-datacollector.svg?branch=master)](https://travis-ci.org/inspiredjava/oepool-datacollector)
 # Data collector module for [open-ethereum-pool](https://github.com/sammy007/open-ethereum-pool)
