@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
 
 @RunWith(JUnitParamsRunner.class)
-public class PropertyValidatorImplTest {
+public class ConfigPropertiesValidatorTest {
 
     private static final String VALID_POOL_ADDRESS = "http://open-ethereum-pool.com";
     private static final String INVALID_POOL_ADDRESS = "http://open-ethereum-pool..com";
@@ -33,11 +33,15 @@ public class PropertyValidatorImplTest {
     private static final String VALID_ETH_VALLET_2 = "0x4C705E7A03B044dcA0D13943ccfa4C9e63eD1E97";
     private static final String INVALID_ETH_VALLET_1 = "0x4C705EcA0D13943ccfa4C9e63eD1E96";
     private static final String INVALID_ETH_VALLET_2 = "0x4C705$%A03B044dcA0D13943ccfa4C9e63eD1E96";
-    private static final String INVALID_ETH_VALLET_3 = "0x4C";
-    private static final String INVALID_ETH_VALLET_4 = "0x4C705E7A03B044dcA0D13943ccfa4C9e63eD1E96111111";
+    private static final String INVALID_ETH_VALLET_3 = "0x4C2";
+    private static final String INVALID_ETH_VALLET_4 = "0x4C705E7A03B044dcA0D13943ccfa4C9e63eD1E96qqqqqqq";
+    private static final String INVALID_ETH_VALLET_5 = "0x4C705E7A03B044dcA0D13943ccfa4C9e63eD1E96 ";
+    private static final String INVALID_ETH_VALLET_6 = " 0x4C705E7A03B044dcA0D13943ccfa4C9e63eD1E96";
+    private static final String INVALID_ETH_VALLET_7 = "124C705E7A03B044dcA0D13943ccfa4C9e63eD1E96";
+    private static final String INVALID_ETH_VALLET_8 = "120x4C705E7A03B044dcA0D13943ccfa4C9e63eD1E96";
 
     private ConfigProperties configProperties = new ConfigProperties();
-    private PropertyValidator propertyValidator = new PropertyValidatorImpl();
+    private PropertyValidator propertyValidator = new ConfigPropertiesValidator();
 
     private Object[] getValidProperties() {
         String[] wallets = new String[2];
@@ -91,7 +95,7 @@ public class PropertyValidatorImplTest {
     }
 
     private Object[] getPropertiesWithNoWallets() {
-        String[] wallets = new String[2];
+        String[] wallets = new String[0];
         configProperties.setPoolAddress(VALID_POOL_ADDRESS);
         configProperties.setWalletArray(wallets);
         configProperties.setRequestPeriod(10);
@@ -119,41 +123,73 @@ public class PropertyValidatorImplTest {
     }
 
     private Object[] getProperiesWithMalformedWallets() {
-        String[] wallets1 = new String[1];
-        String[] wallets2 = new String[1];
-        String[] wallets3 = new String[1];
-        String[] wallets4 = new String[1];
-        wallets1[0] = INVALID_ETH_VALLET_1;
-        wallets2[0] = INVALID_ETH_VALLET_2;
-        wallets3[0] = INVALID_ETH_VALLET_3;
-        wallets4[0] = INVALID_ETH_VALLET_4;
+        String[] wallet1 = new String[1];
+        String[] wallet2 = new String[1];
+        String[] wallet3 = new String[1];
+        String[] wallet4 = new String[1];
+        String[] wallet5 = new String[1];
+        String[] wallet6 = new String[1];
+        String[] wallet7 = new String[1];
+        String[] wallet8 = new String[1];
+        wallet1[0] = INVALID_ETH_VALLET_1;
+        wallet2[0] = INVALID_ETH_VALLET_2;
+        wallet3[0] = INVALID_ETH_VALLET_3;
+        wallet4[0] = INVALID_ETH_VALLET_4;
+        wallet5[0] = INVALID_ETH_VALLET_5;
+        wallet6[0] = INVALID_ETH_VALLET_6;
+        wallet7[0] = INVALID_ETH_VALLET_7;
+        wallet8[0] = INVALID_ETH_VALLET_8;
 
         ConfigProperties configProperties1 = new ConfigProperties();
         ConfigProperties configProperties2 = new ConfigProperties();
         ConfigProperties configProperties3 = new ConfigProperties();
         ConfigProperties configProperties4 = new ConfigProperties();
+        ConfigProperties configProperties5 = new ConfigProperties();
+        ConfigProperties configProperties6 = new ConfigProperties();
+        ConfigProperties configProperties7 = new ConfigProperties();
+        ConfigProperties configProperties8 = new ConfigProperties();
 
         configProperties1.setPoolAddress(VALID_POOL_ADDRESS);
-        configProperties1.setWalletArray(wallets1);
+        configProperties1.setWalletArray(wallet1);
         configProperties1.setRequestPeriod(10);
 
         configProperties2.setPoolAddress(VALID_POOL_ADDRESS);
-        configProperties2.setWalletArray(wallets2);
+        configProperties2.setWalletArray(wallet2);
         configProperties2.setRequestPeriod(10);
 
         configProperties3.setPoolAddress(VALID_POOL_ADDRESS);
-        configProperties3.setWalletArray(wallets3);
+        configProperties3.setWalletArray(wallet3);
         configProperties3.setRequestPeriod(10);
 
         configProperties4.setPoolAddress(VALID_POOL_ADDRESS);
-        configProperties4.setWalletArray(wallets4);
+        configProperties4.setWalletArray(wallet4);
+        configProperties4.setRequestPeriod(10);
+
+        configProperties4.setPoolAddress(VALID_POOL_ADDRESS);
+        configProperties4.setWalletArray(wallet5);
+        configProperties4.setRequestPeriod(10);
+
+        configProperties4.setPoolAddress(VALID_POOL_ADDRESS);
+        configProperties4.setWalletArray(wallet6);
+        configProperties4.setRequestPeriod(10);
+
+        configProperties4.setPoolAddress(VALID_POOL_ADDRESS);
+        configProperties4.setWalletArray(wallet7);
+        configProperties4.setRequestPeriod(10);
+
+        configProperties4.setPoolAddress(VALID_POOL_ADDRESS);
+        configProperties4.setWalletArray(wallet8);
         configProperties4.setRequestPeriod(10);
 
         return new ConfigProperties[] {
                 configProperties1,
                 configProperties2,
                 configProperties3,
-                configProperties4
+                configProperties4,
+                configProperties5,
+                configProperties6,
+                configProperties7,
+                configProperties8
 
         };
     }

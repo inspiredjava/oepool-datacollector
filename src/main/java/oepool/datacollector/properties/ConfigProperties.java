@@ -21,7 +21,7 @@ public class ConfigProperties {
 
     private String poolAddress;
     private String[] walletArray;
-    private int requestPeriod;
+    private Integer requestPeriod;
 
     public String getPoolAddress() {
         return poolAddress;
@@ -39,11 +39,11 @@ public class ConfigProperties {
         this.walletArray = walletArray;
     }
 
-    public int getRequestPeriod() {
+    public Integer getRequestPeriod() {
         return requestPeriod;
     }
 
-    public void setRequestPeriod(int requestPeriod) {
+    public void setRequestPeriod(Integer requestPeriod) {
             this.requestPeriod = requestPeriod;
         }
 }
