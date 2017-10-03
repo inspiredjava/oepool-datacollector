@@ -1,0 +1,1 @@
+# Data collector module for [open-ethereum-pool](https://github.com/sammy007/open-ethereum-pool)

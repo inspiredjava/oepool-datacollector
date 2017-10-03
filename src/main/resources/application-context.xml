@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd"
+        default-autowire="byName">
+
+    <bean id="bootStrap" class="oepool.datacollector.BootStrap"/>
+    <bean id="propertyLoader" class="oepool.datacollector.properties.PropertyLoader" init-method="loadProperties"/>
+    <bean id="walletDao" class="oepool.datacollector.dao.pg.PgWalletDao"/>
+    <bean id="walletController" class="oepool.datacollector.controller.WalletController">
+        <property name="poolAddress" value="#{propertyLoader.getConfigProperties().getPoolAddress()}"/>
+    </bean>
+    <bean class="oepool.datacollector.model.Worker" id="worker"/>
+    <bean class="oepool.datacollector.dao.json.WalletJsonParser" id="jsonParser"/>
+    <bean id="loopThread" class="oepool.datacollector.LoopThread" >
+        <property name="wallets" value="#{propertyLoader.getConfigProperties().getWalletArray()}"/>
+        <property name="period" value="#{propertyLoader.getConfigProperties().getRequestPeriod()}"/>
+    </bean>
+    <bean class="oepool.datacollector.properties.ConfigProperties" id="configProperties"/>
+
+</beans>
