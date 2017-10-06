@@ -34,16 +34,12 @@ public class ConfigPropertiesValidator implements PropertyValidator {
     }
 
     private boolean walletsValidation(String[] walletArray) {
-        // Null check
-        if (walletArray == null) {
+        // Null check and Empty array check
+        if (walletArray == null || walletArray.length == 0) {
             return false;
         }
 
-        // Empty array check
-        if (walletArray.length == 0) {
-            return false;
-        }
-
+        // Regex check
         Set<String> testSet = new HashSet<>();
         boolean matcherFlag = true;
         boolean duplicateFlag = true;
@@ -64,20 +60,12 @@ public class ConfigPropertiesValidator implements PropertyValidator {
     }
 
     private boolean poolAddressValidation(String poolAddress) {
-        // Null check
-        if (poolAddress == null) {
-            return false;
-        }
-        // Empty String check
-        if (StringUtils.isEmpty(poolAddress)) {
-            return false;
-        }
-        // Pattern check
         UrlValidator urlValidator = new UrlValidator();
-        if (!urlValidator.isValid(poolAddress)) {
+        if (poolAddress == null ||
+                StringUtils.isEmpty(poolAddress) ||
+                !urlValidator.isValid(poolAddress)) {
             return false;
         }
-
 
         return true;
     }

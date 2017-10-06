@@ -39,87 +39,83 @@ public class ConfigPropertiesValidatorTest {
     private static final String INVALID_ETH_VALLET_6 = " 0x4C705E7A03B044dcA0D13943ccfa4C9e63eD1E96";
     private static final String INVALID_ETH_VALLET_7 = "124C705E7A03B044dcA0D13943ccfa4C9e63eD1E96";
     private static final String INVALID_ETH_VALLET_8 = "120x4C705E7A03B044dcA0D13943ccfa4C9e63eD1E96";
+    private static final Integer PERIOD = 10;
 
     private ConfigProperties configProperties = new ConfigProperties();
     private PropertyValidator propertyValidator = new ConfigPropertiesValidator();
+    private String[] walletsArray_length_1 = new String[1];
+    private String[] walletsArray_length_2 = new String[2];
 
-    private Object[] getValidProperties() {
-        String[] wallets = new String[2];
-        wallets[0] = VALID_ETH_VALLET_1;
-        wallets[1] = VALID_ETH_VALLET_2;
+    @Test
+    public void validatorShouldPassAllProperties() {
+        walletsArray_length_2[0] = VALID_ETH_VALLET_1;
+        walletsArray_length_2[1] = VALID_ETH_VALLET_2;
 
         configProperties.setPoolAddress(VALID_POOL_ADDRESS);
-        configProperties.setWalletArray(wallets);
-        configProperties.setRequestPeriod(10);
+        configProperties.setWalletArray(walletsArray_length_2);
+        configProperties.setRequestPeriod(PERIOD);
 
-        return new ConfigProperties[] {configProperties};
+        boolean validationResult = propertyValidator.validate(configProperties);
+
+        assertTrue(validationResult);
     }
 
     @Test
-    @Parameters(method = "getValidProperties")
-    public void validatorShouldPassAllProperties(ConfigProperties configProperties) {
-        assertTrue(propertyValidator.validate(configProperties));
-    }
+    public void propertiesShouldContainPoolAddressParameter() {
+        walletsArray_length_1[0] = VALID_ETH_VALLET_1;
+        configProperties.setWalletArray(walletsArray_length_1);
+        configProperties.setRequestPeriod(PERIOD);
 
-    private Object[] getPropertiesWithNullPoolAddress() {
-        String[] wallets = new String[1];
-        wallets[0] = VALID_ETH_VALLET_1;
-        configProperties.setWalletArray(wallets);
-        configProperties.setRequestPeriod(10);
+        boolean validationResult = propertyValidator.validate(configProperties);
 
-        return new ConfigProperties[] {configProperties};
+        assertFalse(validationResult);
     }
 
     @Test
-    @Parameters(method = "getPropertiesWithNullPoolAddress")
-    public void propertiesShouldContainPoolAddressParameter(ConfigProperties configProperties) {
-        assertFalse(propertyValidator.validate(configProperties));
+    public void validatorShouldNotAllowInvalidPoolAddress() {
+        walletsArray_length_2[0] = VALID_ETH_VALLET_1;
+        configProperties.setPoolAddress(INVALID_POOL_ADDRESS);
+        configProperties.setWalletArray(walletsArray_length_2);
+        configProperties.setRequestPeriod(PERIOD);
+
+        boolean validationResult = propertyValidator.validate(configProperties);
+        assertFalse(validationResult);
     }
 
-    private Object[] getPropertiesWithTwoSameWallets() {
-        String[] wallets = new String[2];
-        wallets[0] = VALID_ETH_VALLET_1;
-        wallets[1] = VALID_ETH_VALLET_1;
+    @Test
+    public void propertiesShouldContainWalletsParameter() {
+        configProperties.setPoolAddress(VALID_POOL_ADDRESS);
+        configProperties.setRequestPeriod(PERIOD);
+
+        boolean validationResult = propertyValidator.validate(configProperties);
+
+        assertFalse(validationResult);
+    }
+
+    @Test
+    public void validatorShouldNotAllowEmptyWalletArray() {
+        walletsArray_length_1[0] = "";
+        configProperties.setPoolAddress(VALID_POOL_ADDRESS);
+        configProperties.setWalletArray(walletsArray_length_1);
+        configProperties.setRequestPeriod(PERIOD);
+
+        boolean validationResult = propertyValidator.validate(configProperties);
+
+        assertFalse(validationResult);
+    }
+
+    @Test
+    public void validatorShouldNotAllowSameWallets() {
+        walletsArray_length_2[0] = VALID_ETH_VALLET_1;
+        walletsArray_length_2[1] = VALID_ETH_VALLET_1;
 
         configProperties.setPoolAddress(VALID_POOL_ADDRESS);
-        configProperties.setWalletArray(wallets);
-        configProperties.setRequestPeriod(10);
+        configProperties.setWalletArray(walletsArray_length_2);
+        configProperties.setRequestPeriod(PERIOD);
 
-        return new ConfigProperties[] {configProperties};
-    }
+        boolean validationResult = propertyValidator.validate(configProperties);
 
-    @Test
-    @Parameters(method = "getPropertiesWithTwoSameWallets")
-    public void validatorShouldNotAllowSameWallets(ConfigProperties configProperties) {
-        assertFalse(propertyValidator.validate(configProperties));
-    }
-
-    private Object[] getPropertiesWithNoWallets() {
-        String[] wallets = new String[0];
-        configProperties.setPoolAddress(VALID_POOL_ADDRESS);
-        configProperties.setWalletArray(wallets);
-        configProperties.setRequestPeriod(10);
-
-        return new ConfigProperties[] {configProperties};
-    }
-
-    @Test
-    @Parameters(method = "getPropertiesWithNoWallets")
-    public void validatorShouldNotAllowEmptyWalletArray(ConfigProperties configProperties) {
-        assertFalse(propertyValidator.validate(configProperties));
-    }
-
-    private Object[] getPropertiesWithNullWalletsArray() {
-        configProperties.setPoolAddress(VALID_POOL_ADDRESS);
-        configProperties.setRequestPeriod(10);
-
-        return new ConfigProperties[] {configProperties};
-    }
-
-    @Test
-    @Parameters(method = "getPropertiesWithNullWalletsArray")
-    public void propertiesShouldContainWalletsParameter(ConfigProperties configProperties) {
-        assertFalse(propertyValidator.validate(configProperties));
+        assertFalse(validationResult);
     }
 
     private Object[] getProperiesWithMalformedWallets() {
@@ -151,35 +147,35 @@ public class ConfigPropertiesValidatorTest {
 
         configProperties1.setPoolAddress(VALID_POOL_ADDRESS);
         configProperties1.setWalletArray(wallet1);
-        configProperties1.setRequestPeriod(10);
+        configProperties1.setRequestPeriod(PERIOD);
 
         configProperties2.setPoolAddress(VALID_POOL_ADDRESS);
         configProperties2.setWalletArray(wallet2);
-        configProperties2.setRequestPeriod(10);
+        configProperties2.setRequestPeriod(PERIOD);
 
         configProperties3.setPoolAddress(VALID_POOL_ADDRESS);
         configProperties3.setWalletArray(wallet3);
-        configProperties3.setRequestPeriod(10);
+        configProperties3.setRequestPeriod(PERIOD);
 
         configProperties4.setPoolAddress(VALID_POOL_ADDRESS);
         configProperties4.setWalletArray(wallet4);
-        configProperties4.setRequestPeriod(10);
+        configProperties4.setRequestPeriod(PERIOD);
 
         configProperties4.setPoolAddress(VALID_POOL_ADDRESS);
         configProperties4.setWalletArray(wallet5);
-        configProperties4.setRequestPeriod(10);
+        configProperties4.setRequestPeriod(PERIOD);
 
         configProperties4.setPoolAddress(VALID_POOL_ADDRESS);
         configProperties4.setWalletArray(wallet6);
-        configProperties4.setRequestPeriod(10);
+        configProperties4.setRequestPeriod(PERIOD);
 
         configProperties4.setPoolAddress(VALID_POOL_ADDRESS);
         configProperties4.setWalletArray(wallet7);
-        configProperties4.setRequestPeriod(10);
+        configProperties4.setRequestPeriod(PERIOD);
 
         configProperties4.setPoolAddress(VALID_POOL_ADDRESS);
         configProperties4.setWalletArray(wallet8);
-        configProperties4.setRequestPeriod(10);
+        configProperties4.setRequestPeriod(PERIOD);
 
         return new ConfigProperties[] {
                 configProperties1,
@@ -190,7 +186,6 @@ public class ConfigPropertiesValidatorTest {
                 configProperties6,
                 configProperties7,
                 configProperties8
-
         };
     }
 
@@ -200,36 +195,15 @@ public class ConfigPropertiesValidatorTest {
         assertFalse(propertyValidator.validate(configProperties));
     }
 
-    private Object[] getPropertiesWithInvalidPoolAddress() {
-        String[] wallets = new String[2];
-        wallets[0] = VALID_ETH_VALLET_1;
-        configProperties.setPoolAddress(INVALID_POOL_ADDRESS);
-        configProperties.setWalletArray(wallets);
-        configProperties.setRequestPeriod(10);
-
-        return new ConfigProperties[] {configProperties};
-
-    }
-
     @Test
-    @Parameters(method = "getPropertiesWithInvalidPoolAddress")
-    public void validatorShouldNotAllowInvalidPoolAddress(ConfigProperties configProperties) {
-        assertFalse(propertyValidator.validate(configProperties));
-    }
-
-    private Object[] getPropertiesWithNullPeriod() {
-        String[] wallets = new String[1];
-        wallets[0] = VALID_ETH_VALLET_1;
+    public void propertiesShouldContainPeriodParameter() {
+        walletsArray_length_1[0] = VALID_ETH_VALLET_1;
         configProperties.setPoolAddress(VALID_POOL_ADDRESS);
-        configProperties.setWalletArray(wallets);
+        configProperties.setWalletArray(walletsArray_length_1);
 
-        return new ConfigProperties[] {configProperties};
-    }
+        boolean validationResult = propertyValidator.validate(configProperties);
 
-    @Test
-    @Parameters(method = "getPropertiesWithNullPeriod")
-    public void propertiesShouldContainPeriodParameter(ConfigProperties configProperties) {
-        assertFalse(propertyValidator.validate(configProperties));
+        assertFalse(validationResult);
     }
 
     private Object[] getPropertiesWithNegativeAndZeroPeriod() {
